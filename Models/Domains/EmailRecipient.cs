@@ -1,0 +1,18 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Web;
+
+namespace MailSender.Models.Domains
+{
+    public class EmailRecipient
+    {
+        public int Id { get; set; }
+        public int EmailId { get; set; }
+        [Display(Name = "Odbiorca")]
+        public int AddressId { get; set; }
+        public Email Email { get; set; }
+        public Address Address { get; set; }
+    }
+}

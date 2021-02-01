@@ -13,7 +13,7 @@ namespace MailSender.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "202101312216314_init"; }
+            get { return "202102010731028_init"; }
         }
         
         string IMigrationMetadata.Source

@@ -1,0 +1,64 @@
+﻿@model IEnumerable<MailSender.Models.Domains.Address>
+@{
+    ViewBag.Title = "adresy";
+}
+
+<h1>Książka Adresowa</h1>
+
+
+<button class="btn btn-primary mb-3 mt-3"
+        onclick='window.location.href = "@Url.Action("Address","Home")"'>
+    Nowy Adres
+</button>
+
+@if (Model != null && Model.Any())
+{
+    <table class="table table-hover table-striped mt-3 mt-5">
+        <thead>
+            <tr>
+                <th scope="col">nazwa</th>
+                <th scope="col">adres</th>
+                <th scope="col"> </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var address in Model)
+            {
+                <tr>
+                    <td>
+                        <a class="font-weight-bold"
+                           href="@Url.Action("Address","Home", new { id = address.Id })">
+                            @address.Name
+                        </a>
+                    </td>
+                     <td>@address.Email</td>
+                    <td>
+                        <button class="btn btn-danger btn-sm"
+                                onclick="deleteAddress('@address.Id',this)">
+                            Usuń Adres
+                        </button>
+                    </td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+}
+else
+{
+    <div>
+        Brak adresów w książce adresowej
+    </div>
+}
+
+
+
+@section scripts
+{
+    <script type="text/javascript">
+        function deleteAddress() {
+            if (!confirm("Czy na pewno chcesz usunąć adres z książki adresowej ?"))
+                return;
+        }
+    </script>
+}

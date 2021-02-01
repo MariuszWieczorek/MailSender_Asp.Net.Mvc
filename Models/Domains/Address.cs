@@ -28,5 +28,8 @@ namespace MailSender.Models.Domains
         public ApplicationUser User { get; set; }
 
         public ICollection<EmailRecipient> EmailRecipients { get; set; }
+
+
+       
     }
 }

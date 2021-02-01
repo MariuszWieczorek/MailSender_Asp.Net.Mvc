@@ -1,4 +1,89 @@
-﻿@{
-    ViewBag.Title = "Home Page";
+﻿@model IEnumerable<MailSender.Models.Domains.Email>
+@{
+    ViewBag.Title = "e-mail list";
 }
+
+<h1>Wiadomości</h1>
+
+<button class="btn btn-primary mb-3 mt-3"
+        onclick='window.location.href = "@Url.Action("Email","Home")"'>
+    Utwórz nową wiadomość
+</button>
+
+
+@if (Model != null && Model.Any())
+{
+    <table class="table table-hover table-striped mt-3 mt-5">
+        <thead>
+            <tr>
+                <th scope="col">tytuł</th>
+                <th scope="col">adresaci</th>
+                <th scope="col">data utworzenia</th>
+                <th scope="col">data wysłania </th>
+                <th scope="col"> </th>
+                <th scope="col"> </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var email in Model)
+            {
+            <tr>
+                <td>
+                    <a class="font-weight-bold"
+                       href="@Url.Action("Email","Home", new { id = email.Id })">
+                        @email.Subject
+                    </a>
+                </td>
+                <td>
+                    @foreach (var recipient in email.EmailRecipients)
+                    {
+                        <div>@recipient.Address.Email</div>
+                    }
+                </td>
+                <td>@email.CreatedDate.ToString("dd-MM-yyyy")</td>
+                <td>@email.SentDate.ToString("dd-MM-yyyy")</td>
+                <td>
+                    <button class="btn btn-primary btn-sm"
+                            onclick="sendEmail('@email.Id',this)">
+                        wyślij
+                    </button>
+                </td>
+                <td>
+                    <button class="btn btn-danger btn-sm"
+                            onclick="deleteEmail('@email.Id',this)">
+                        Usuń
+                    </button>
+                </td>
+            </tr>
+            }
+
+        </tbody>
+    </table>
+}
+else
+{
+    <div>
+        Brak poczty e-mail
+    </div>
+}
+
+
+
+@section scripts
+{
+    <script type="text/javascript">
+        function deleteEmail() {
+            if (!confirm("Czy na pewno chcesz usunąć wiadomość ?"))
+                return;
+        }
+
+        function sendEmail() {
+            if (!confirm("Czy na pewno chcesz wysłać wiadomość ?"))
+                return;
+        }
+    </script>
+}
+
+
+
 

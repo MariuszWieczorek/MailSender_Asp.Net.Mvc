@@ -14,7 +14,7 @@
 
         <div class="container">
 
-            <a class="navbar-brand" href="@Url.Action("Index","Home")">Strona Główna</a>
+            <a class="navbar-brand" href="@Url.Action("Index","Home")">Wiadomości</a>
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent"
@@ -25,6 +25,10 @@
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item active">
+                        @Html.ActionLink("książka adresowa", "Addresses", "Home", null,
+                        htmlAttributes: new { @class = "nav-link" })
+                    </li>
                     <li class="nav-item active">
                         @Html.ActionLink("O mnie", "About", "Home", null,
                         htmlAttributes: new { @class = "nav-link" })
@@ -45,7 +49,7 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - Zarządzanie fakturami</p>
+            <p>&copy; @DateTime.Now.Year - Mail Sender</p>
         </footer>
     </div>
 

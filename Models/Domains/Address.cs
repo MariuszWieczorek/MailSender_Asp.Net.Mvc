@@ -21,7 +21,7 @@ namespace MailSender.Models.Domains
         [Required]
         [Display(Name = "Adres")]
         public string Email { get; set; }
-        
+
         [Required]
         [ForeignKey("User")]
         public string UserId { get; set; }
@@ -29,7 +29,6 @@ namespace MailSender.Models.Domains
 
         public ICollection<EmailRecipient> EmailRecipients { get; set; }
 
-
-       
+    
     }
 }

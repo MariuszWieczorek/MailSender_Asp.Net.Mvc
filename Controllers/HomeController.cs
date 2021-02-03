@@ -1,4 +1,5 @@
 ﻿using MailSender.Models.Domains;
+using MailSender.Models.Repositories;
 using MailSender.Models.ViewModels;
 using Microsoft.AspNet.Identity;
 using System;
@@ -12,55 +13,33 @@ namespace MailSender.Controllers
     [Authorize]
     public class HomeController : Controller
     {
+
+        private FakeRepositories _fakeRepositories = new FakeRepositories();
+
         public ActionResult Index()
         {
-
-            var emails = new List<Email>
-            {
-                new Email
-                {
-                    Id = 1,
-                    Subject = "uwagi dotyczące błędów a aplikacji",
-                    CreatedDate = DateTime.Now,
-                    SentDate = DateTime.Now,
-                    EmailRecipients = new List<EmailRecipient>
-                    {
-                        new EmailRecipient {Address = new Address{Name="Jan",Email="jan@onet.pl" } },
-                        new EmailRecipient {Address = new Address{Name="Marek",Email="marek@onet.pl" } },
-                    }
-                },
-
-                new Email
-                {
-                    Id = 2,
-                    Subject = "potwierdzenie dokonania płatności",
-                    CreatedDate = DateTime.Now,
-                    SentDate = DateTime.Now,
-                    EmailRecipients = new List<EmailRecipient>
-                    {
-                        new EmailRecipient {Address = new Address{Name="Jan",Email="jan@onet.pl" } },
-                        new EmailRecipient {Address = new Address{Name="Marek",Email="marek@onet.pl" } },
-                    }
-                },
-
-            };
-
-
+            var userId = User.Identity.GetUserId();
+            var emails = _fakeRepositories.GetFakeEmails(userId);
             return View(emails);
         }
 
         public ActionResult Email()
         {
-            return View();
+            var userId = User.Identity.GetUserId();
+            var emails = _fakeRepositories.GetFakeEmails(userId);
+            var email = emails.First(x => x.Id == 1);
+            var editEmail = PrepareEmailVm(email,userId);
+            return View(editEmail);
         }
 
         public ActionResult Address(int id = 0)
         {
             var userId = User.Identity.GetUserId();
-            
+            var addresses = _fakeRepositories.GetFakeAddresses(userId);
+
             var address = id == 0 ?
                  GetNewAddress(userId) :
-                new Address { Id = 1, Name = "Aleksandra Nowak", Email = "ola.nowak@onet.pl" };
+                 addresses.First(x => x.Id == 1);
 
             var editAddress = PrepareEditAddressVm(address, userId);
 
@@ -70,7 +49,7 @@ namespace MailSender.Controllers
         public ActionResult Addresses()
         {
             var userId = User.Identity.GetUserId();
-            var addresses = GetFakeAddresses(userId);
+            var addresses = _fakeRepositories.GetFakeAddresses(userId);
             return View(addresses);
         }
 
@@ -91,7 +70,7 @@ namespace MailSender.Controllers
             {
                 Email = email,
                 Heading = email.Id == 0 ? "Dodawanie Nowej Wiadomości" : "Edycja",
-                Addresses = GetFakeAddresses(userId)
+                Addresses = _fakeRepositories.GetFakeAddresses(userId)
             };
         }
 
@@ -107,15 +86,12 @@ namespace MailSender.Controllers
             };
         }
 
-        private List<Address> GetFakeAddresses(string userId)
-        {
-            return new List<Address>
-            {
-                new Address{Id = 1, Name="Jan Kowalski",Email="jan.kowalski@onet.pl" },
-                new Address{Id = 2, Name="Marek Janicki",Email="marek.janicki@onet.pl"},
-                new Address{Id = 3, Name="Aleksandra Nowak",Email="ola.nowak@onet.pl" }
-            };
-        }
+        
+
+        
+
+        
+
 
         #region okna informacyjne
         [AllowAnonymous]

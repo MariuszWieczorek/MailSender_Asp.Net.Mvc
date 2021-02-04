@@ -72,5 +72,28 @@ namespace MailSender.Models.Repositories
             };
         }
 
+        public Address GetNewAddress(string userId)
+        {
+            return new Address
+            {
+                UserId = userId,
+                Name = string.Empty,
+                Email = string.Empty
+            };
+        }
+
+        public Email GetNewEmail(string userId)
+        {
+            return new Email
+            {
+                Id = 0,
+                Subject = "",
+                CreatedDate = DateTime.Now,
+                SentDate = DateTime.Now,
+                EmailRecipients = new List<EmailRecipient>()
+            };   
+        }
+
+        // -------------------------------------------------------------------------------------
     }
 }

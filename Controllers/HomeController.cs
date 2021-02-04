@@ -23,11 +23,15 @@ namespace MailSender.Controllers
             return View(emails);
         }
 
-        public ActionResult Email()
+        public ActionResult Email(int id = 0)
         {
             var userId = User.Identity.GetUserId();
-            var emails = _fakeRepositories.GetFakeEmails(userId);
-            var email = emails.First(x => x.Id == 1);
+
+            var email = id == 0 ?
+            _fakeRepositories.GetNewEmail(userId) :
+            _fakeRepositories.GetFakeEmails(userId).First(x => x.Id == 1);
+            
+                        
             var editEmail = PrepareEmailVm(email,userId);
             return View(editEmail);
         }
@@ -35,11 +39,10 @@ namespace MailSender.Controllers
         public ActionResult Address(int id = 0)
         {
             var userId = User.Identity.GetUserId();
-            var addresses = _fakeRepositories.GetFakeAddresses(userId);
 
             var address = id == 0 ?
-                 GetNewAddress(userId) :
-                 addresses.First(x => x.Id == 1);
+                 _fakeRepositories.GetNewAddress(userId) :
+                 _fakeRepositories.GetFakeAddresses(userId).First(x => x.Id == 1);
 
             var editAddress = PrepareEditAddressVm(address, userId);
 
@@ -76,15 +79,7 @@ namespace MailSender.Controllers
 
         #endregion
 
-        private Address GetNewAddress(string userId)
-        {
-            return new Address
-            {
-                UserId = userId,
-                Name = string.Empty,
-                Email = string.Empty
-            };
-        }
+      
 
         
 

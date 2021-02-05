@@ -1,4 +1,4 @@
-﻿@model MailSender.Models.ViewModels.EditAddressViewModel
+﻿@model MailSender.Models.ViewModels.EditEmailRecipientViewModel
 
 @{
     ViewBag.Title = Model.Heading;
@@ -6,35 +6,39 @@
 
 <h2>@Model.Heading</h2>
 
-@using (Html.BeginForm("Address", "Home"))
+<p class="alert alert-dark mb-4 mt-4">
+    EmailRecipiment ,
+    EmailId = <strong>@Model.EmailRecipient.EmailId</strong> ,
+    Id = <strong>@Model.EmailRecipient.Id</strong>,
+    AddressId = <strong>@Model.EmailRecipient.AddressId</strong>
+</p>
+
+@using (Html.BeginForm("EmailRecipient", "Home"))
 {
     @Html.AntiForgeryToken()
 
-    if (Model.Address.Id == 0)
+    if (Model.EmailRecipient.Id == 0)
     {
         <p class="alert alert-info mb-4 mt-4">
-            Pola: Nazwa i Adres są <strong>wymagane</strong>
+            Pole: Adres jest <strong>wymagane</strong>
         </p>
     }
-    @Html.HiddenFor(x => x.Address.Id)
+    
+    @Html.HiddenFor(x => x.EmailRecipient.Id)
 
     <div class="form-group mb-3">
-        @Html.LabelFor(x => x.Address.Name)
-        @Html.TextBoxFor(x => x.Address.Name,
+        @Html.LabelFor(x => x.EmailRecipient.AddressId)
+        @Html.DropDownListFor(x => x.EmailRecipient.AddressId,
+       new SelectList(Model.Addresses, "Id", "Name"),
+       "--- Wybierz odbiorcę ---",
        new { @class = "form-control" })
-        @Html.ValidationMessageFor(x => x.Address.Name)
-    </div>
-
-    <div class="form-group mb-3">
-        @Html.LabelFor(x => x.Address.Email)
-        @Html.TextBoxFor(x => x.Address.Email,
-       new { @class = "form-control" })
-        @Html.ValidationMessageFor(x => x.Address.Email)
+        @Html.ValidationMessageFor(x => x.EmailRecipient.AddressId)
     </div>
 
     <button class="btn btn-primary btn-lg" type="submit">
         Zapisz
     </button>
+
 }
 
 
@@ -54,5 +58,3 @@
 
     </script>
 }
-
-

@@ -1,0 +1,49 @@
+﻿@model IEnumerable<MailSender.Models.Domains.EmailRecipient>
+
+<div class="row">
+    <p class="alert alert-dark mb-1 mt-1">
+        <strong>Lista Odbiorców Wiadomości</strong>
+    </p>
+
+    <table class="table table-hover table-striped mt-3 mb-5">
+        <thead>
+            <tr>
+                <th scope="col">nazwa</th>
+                <th scope="col">adres</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @if (true)
+            {
+
+
+                foreach (var position in Model)
+                {
+                    <tr>
+
+                        <td>
+                            <a class="font-weight-bold"
+                               href="@Url.Action("EmailRecipient", "Home",
+                                                            new { emailId = position.EmailId,
+                                                                emailRecipientId = position.Id } )">
+                                @position.Address.Name
+                            </a>
+                        </td>
+                        <td>@position.Address.Email</td>
+                        <td>
+                            <button class="btn btn-danger btn-sm"
+                                    onclick="deleteEmailRecipient('@position.Id','@position.EmailId',this)">
+                                Usuń Pozycję
+                            </button>
+                        </td>
+                    </tr>
+                }
+            }
+
+        </tbody>
+    </table>
+</div>
+
+

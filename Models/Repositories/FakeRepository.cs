@@ -6,9 +6,11 @@ using System.Web;
 
 namespace MailSender.Models.Repositories
 {
-    public class FakeRepositories
+    public class FakeRepository
     {
-        public List<Address> GetFakeAddresses(string userId)
+
+
+        public List<Address> GetAddresses(string userId)
         {
             return new List<Address>
             {
@@ -21,10 +23,10 @@ namespace MailSender.Models.Repositories
         }
 
         // Testowa lista wiadomości Email
-        public List<Email> GetFakeEmails(string userId)
+        public List<Email> GetEmails(string userId)
         {
 
-            var addreses = GetFakeAddresses("1");
+            var addreses = GetAddresses(userId);
 
             return new List<Email>
             {
@@ -34,11 +36,12 @@ namespace MailSender.Models.Repositories
                     Subject = "uwagi dotyczące błędów a aplikacji",
                     CreatedDate = DateTime.Now,
                     SentDate = DateTime.Now,
+                    Message = "treść maila nr 1",
                     EmailRecipients = new List<EmailRecipient>
                     {
                         
-                        new EmailRecipient {Address = addreses.First(x => x.Id == 1) },
-                        new EmailRecipient {Address = addreses.First(x => x.Id == 2) },
+                        new EmailRecipient {Id = 1, EmailId = 1, AddressId = 1,Address = addreses.First(x => x.Id == 1) },
+                        new EmailRecipient {Id = 2, EmailId = 1, AddressId = 2,Address = addreses.First(x => x.Id == 2) },
                     }
                 },
 
@@ -48,11 +51,12 @@ namespace MailSender.Models.Repositories
                     Subject = "potwierdzenie dokonania płatności",
                     CreatedDate = DateTime.Now,
                     SentDate = DateTime.Now,
+                    Message = "treść maila nr 2",
                     EmailRecipients = new List<EmailRecipient>
                     {
-                       new EmailRecipient {Address = addreses.First(x => x.Id == 4) },
-                       new EmailRecipient {Address = addreses.First(x => x.Id == 2) },
-                       new EmailRecipient {Address = addreses.First(x => x.Id == 1) },
+                       new EmailRecipient {Id = 1, EmailId = 2,AddressId = 4,Address = addreses.First(x => x.Id == 4) },
+                       new EmailRecipient {Id = 2, EmailId = 2,AddressId = 2,Address = addreses.First(x => x.Id == 2) },
+                       new EmailRecipient {Id = 3, EmailId = 2,AddressId = 1,Address = addreses.First(x => x.Id == 1) },
                     }
                 },
 
@@ -62,14 +66,41 @@ namespace MailSender.Models.Repositories
                     Subject = "potwierdzenie wysłania zamówienia",
                     CreatedDate = DateTime.Now,
                     SentDate = DateTime.Now,
+                    Message = "treść maila nr 3",
                     EmailRecipients = new List<EmailRecipient>
                     {
-                        new EmailRecipient {Address = addreses.First(x => x.Id == 5) },
-                        new EmailRecipient {Address = addreses.First(x => x.Id == 4) },
+                        new EmailRecipient {Id = 1, EmailId = 3,AddressId = 5,Address = addreses.First(x => x.Id == 5) },
+                        new EmailRecipient {Id = 2, EmailId = 3,AddressId = 4,Address = addreses.First(x => x.Id == 4) },
                     }
                 }
 
             };
+        }
+
+        // Pobiera do edycji odbiorcę wiadomości z listy
+        public EmailRecipient GetEmailRecipient(int emailId, int emailRecipientId, string userId)
+        {
+            var email =  GetEmails(userId).First(x => x.Id == emailId);
+            return email.EmailRecipients.First(x => x.Id == emailRecipientId); 
+        }
+
+        // zwraca nowego odbiorcę wiadomości
+        public EmailRecipient GetNewEmailRecipient(int emailId, int emailRecipientId)
+        {
+            return new EmailRecipient
+            {
+                EmailId = emailId
+            };
+        }
+
+        public Email GetEmail(string userId, int id)
+        {
+            return GetEmails(userId).First(x => x.Id == id);
+        }
+
+        public Address GetAddress(string userId, int id)
+        {
+            return GetAddresses(userId).First(x => x.Id == id);
         }
 
         public Address GetNewAddress(string userId)

@@ -14,12 +14,12 @@ namespace MailSender.Controllers
     public class HomeController : Controller
     {
 
-        private FakeRepositories _fakeRepositories = new FakeRepositories();
+        private FakeRepository _fakeRepository = new FakeRepository();
 
         public ActionResult Index()
         {
             var userId = User.Identity.GetUserId();
-            var emails = _fakeRepositories.GetFakeEmails(userId);
+            var emails = _fakeRepository.GetEmails(userId);
             return View(emails);
         }
 
@@ -28,8 +28,8 @@ namespace MailSender.Controllers
             var userId = User.Identity.GetUserId();
 
             var email = id == 0 ?
-            _fakeRepositories.GetNewEmail(userId) :
-            _fakeRepositories.GetFakeEmails(userId).First(x => x.Id == 1);
+            _fakeRepository.GetNewEmail(userId) :
+            _fakeRepository.GetEmail(userId,id);
             
                         
             var editEmail = PrepareEmailVm(email,userId);
@@ -41,8 +41,8 @@ namespace MailSender.Controllers
             var userId = User.Identity.GetUserId();
 
             var address = id == 0 ?
-                 _fakeRepositories.GetNewAddress(userId) :
-                 _fakeRepositories.GetFakeAddresses(userId).First(x => x.Id == 1);
+                 _fakeRepository.GetNewAddress(userId) :
+                 _fakeRepository.GetAddress(userId,id);
 
             var editAddress = PrepareEditAddressVm(address, userId);
 
@@ -52,8 +52,52 @@ namespace MailSender.Controllers
         public ActionResult Addresses()
         {
             var userId = User.Identity.GetUserId();
-            var addresses = _fakeRepositories.GetFakeAddresses(userId);
+            var addresses = _fakeRepository.GetAddresses(userId);
             return View(addresses);
+        }
+
+        public ActionResult EmailRecipient(int emailId = 0, int emailRecipientId = 0)
+        {
+            var userId = User.Identity.GetUserId();
+
+            var emailRecipient = emailRecipientId == 0 ?
+                _fakeRepository.GetNewEmailRecipient(emailId, emailRecipientId) :
+                _fakeRepository.GetEmailRecipient(emailId, emailRecipientId, userId);
+
+            var editEmailRecipient  = PrepareEmailRecipientVm(emailRecipient, userId);
+            return View(editEmailRecipient);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EmailRecipient(EmailRecipient emailRecipient)
+        {
+            var userId = User.Identity.GetUserId();
+            // zweryfikujemy, czy uzytkownik próbuje zaktualizować swoją fakturę
+            // dodajemy lub aktualizujemy pozycję faktury
+            // wyliczymy wartość pozycji
+            // wyliczymy i zaktualizujemy wrtość faktury
+
+
+            if (!ModelState.IsValid)
+            {
+                var vm = PrepareEmailRecipientVm(emailRecipient,userId);
+                return View("EmailRecipient", vm);
+            }
+
+            /*
+            var product = _productRepository.GetProduct(invoicePosition.ProductId);
+            invoicePosition.Value = product.Value * invoicePosition.Quantity;
+
+            if (invoicePosition.Id == 0)
+                _invoiceRepository.AddPosition(invoicePosition, userId);
+            else
+                _invoiceRepository.UpdatePosition(invoicePosition, userId);
+
+            _invoiceRepository.UpdateInvoiceValue(invoicePosition.InvoiceId, userId);
+            */
+
+            return RedirectToAction("Email", new { id = emailRecipient.EmailId });
         }
 
 
@@ -73,20 +117,21 @@ namespace MailSender.Controllers
             {
                 Email = email,
                 Heading = email.Id == 0 ? "Dodawanie Nowej Wiadomości" : "Edycja",
-                Addresses = _fakeRepositories.GetFakeAddresses(userId)
+                Addresses = _fakeRepository.GetAddresses(userId)
             };
         }
 
+
+        private EditEmailRecipientViewModel PrepareEmailRecipientVm(EmailRecipient emailRecipient, string userId)
+        {
+            return new EditEmailRecipientViewModel
+            {
+                EmailRecipient = emailRecipient,
+                Heading = emailRecipient.Id == 0 ? "Dodawanie Nowego Adresata" : "Edycja Adresata Wiadomości",
+                Addresses = _fakeRepository.GetAddresses(userId)
+            };
+        }
         #endregion
-
-      
-
-        
-
-        
-
-        
-
 
         #region okna informacyjne
         [AllowAnonymous]

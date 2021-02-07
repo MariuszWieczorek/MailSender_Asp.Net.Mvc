@@ -13,9 +13,11 @@ namespace MailSender.Controllers
     [Authorize]
     public class HomeController : Controller
     {
+        private FakeRepository      _fakeRepository = new FakeRepository();
+        private AddressRepository _addressRepository = new AddressRepository();
 
-        private FakeRepository _fakeRepository = new FakeRepository();
-
+        // Strona główna - lista wiadomości
+        [HttpGet]
         public ActionResult Index()
         {
             var userId = User.Identity.GetUserId();
@@ -23,6 +25,17 @@ namespace MailSender.Controllers
             return View(emails);
         }
 
+        // Książka adresowa
+        [HttpGet]
+        public ActionResult Addresses()
+        {
+            var userId = User.Identity.GetUserId();
+            var addresses = _fakeRepository.GetAddresses(userId);
+            return View(addresses);
+        }
+
+        #region dodawanie/edycja wiadomości e-mail
+        [HttpGet]
         public ActionResult Email(int id = 0)
         {
             var userId = User.Identity.GetUserId();
@@ -36,6 +49,32 @@ namespace MailSender.Controllers
             return View(editEmail);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Email(Email email)
+        {
+            var userId = User.Identity.GetUserId();
+
+            // jeżeli nie przejdzie walidacji
+            if (!ModelState.IsValid)
+            {
+                var vm = PrepareEmailVm(email, userId);
+                return View("Email", vm);
+            }
+
+            /*    
+                if (address.Id == 0)
+                    _addressRepository.AddPosition(address, userId);
+                else
+                    _addressRepository.UpdatePosition(address, userId);
+            */
+
+            return RedirectToAction("Index");
+        }
+        #endregion
+
+        #region  Address - dodawanie/edycja adresu do ksiązki - - - - - - - - - -
+        [HttpGet]
         public ActionResult Address(int id = 0)
         {
             var userId = User.Identity.GetUserId();
@@ -49,13 +88,32 @@ namespace MailSender.Controllers
             return View(editAddress);
         }
 
-        public ActionResult Addresses()
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Address(Address address)
         {
             var userId = User.Identity.GetUserId();
-            var addresses = _fakeRepository.GetAddresses(userId);
-            return View(addresses);
-        }
+       
+            // jeżeli nie przejdzie walidacji
+            if (!ModelState.IsValid)
+            {
+                var vm = PrepareEditAddressVm(address, userId);
+                return View("Address", vm);
+            }
 
+        /*    
+            if (address.Id == 0)
+                _addressRepository.AddPosition(address, userId);
+            else
+                _addressRepository.UpdatePosition(address, userId);
+        */
+
+            return RedirectToAction("Addresses", new { id = address.Id });
+        }
+        #endregion
+
+        #region EmailRecipient - dodawanie adresata do listy adresatów wiadomości
+        [HttpGet]
         public ActionResult EmailRecipient(int emailId = 0, int emailRecipientId = 0)
         {
             var userId = User.Identity.GetUserId();
@@ -99,7 +157,7 @@ namespace MailSender.Controllers
 
             return RedirectToAction("Email", new { id = emailRecipient.EmailId });
         }
-
+        #endregion
 
         #region prepare View Model
         private EditAddressViewModel PrepareEditAddressVm(Address address, string userId)
@@ -107,7 +165,7 @@ namespace MailSender.Controllers
             return new EditAddressViewModel
             {
                 Address = address,
-                Heading = address.Id == 0 ? "Dodawanie Nowego Adresu" : "Edycja",
+                Heading = address.Id == 0 ? "Nowy Adres" : "Edycja Adresu",
             };
         }
 
@@ -116,7 +174,7 @@ namespace MailSender.Controllers
             return new EditEmailViewModel
             {
                 Email = email,
-                Heading = email.Id == 0 ? "Dodawanie Nowej Wiadomości" : "Edycja",
+                Heading = email.Id == 0 ? "Nowa Wiadomość" : "Edycja Wiadomości",
                 Addresses = _fakeRepository.GetAddresses(userId)
             };
         }
@@ -127,7 +185,7 @@ namespace MailSender.Controllers
             return new EditEmailRecipientViewModel
             {
                 EmailRecipient = emailRecipient,
-                Heading = emailRecipient.Id == 0 ? "Dodawanie Nowego Adresata" : "Edycja Adresata Wiadomości",
+                Heading = emailRecipient.Id == 0 ? "Dodanie Adresata Wiadomości" : "Edycja Adresata Wiadomości",
                 Addresses = _fakeRepository.GetAddresses(userId)
             };
         }

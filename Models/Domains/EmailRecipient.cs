@@ -11,6 +11,7 @@ namespace MailSender.Models.Domains
         public int Id { get; set; }
         public int EmailId { get; set; }
         [Display(Name = "Odbiorca")]
+        [Required(ErrorMessage = "Pole Adres e-mail jest wymagane !!!")]
         public int AddressId { get; set; }
         public Email Email { get; set; }
         public Address Address { get; set; }

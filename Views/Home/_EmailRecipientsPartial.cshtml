@@ -1,11 +1,7 @@
 ﻿@model IEnumerable<MailSender.Models.Domains.EmailRecipient>
 
 <div class="row">
-    <p class="alert alert-dark mb-1 mt-1">
-        <strong>Lista Odbiorców Wiadomości</strong>
-    </p>
-
-    <table class="table table-hover table-striped mt-3 mb-5">
+    <table class="table table-hover table-striped mt-1 mb-1">
         <thead>
             <tr>
                 <th scope="col">nazwa</th>
@@ -14,12 +10,7 @@
             </tr>
         </thead>
         <tbody>
-
-            @if (true)
-            {
-
-
-                foreach (var position in Model)
+                @foreach (var position in Model)
                 {
                     <tr>
 
@@ -40,8 +31,6 @@
                         </td>
                     </tr>
                 }
-            }
-
         </tbody>
     </table>
 </div>

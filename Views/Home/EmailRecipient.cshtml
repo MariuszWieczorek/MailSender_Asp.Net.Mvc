@@ -23,8 +23,9 @@
             Pole: Adres jest <strong>wymagane</strong>
         </p>
     }
-    
+
     @Html.HiddenFor(x => x.EmailRecipient.Id)
+    @Html.HiddenFor(x => x.EmailRecipient.EmailId)
 
     <div class="form-group mb-3">
         @Html.LabelFor(x => x.EmailRecipient.AddressId)

@@ -6,9 +6,16 @@
 
 <h2>@Model.Heading</h2>
 
+<p class="alert alert-dark mb-4 mt-4">
+    View: <strong>Address</strong> <br>
+    Id = <strong>@Model.Address.Id</strong>,
+    UserId = <strong>@Model.Address.UserId</strong> ,
+</p>
+
 @using (Html.BeginForm("Address", "Home"))
 {
     @Html.AntiForgeryToken()
+    @Html.ValidationSummary()
 
     if (Model.Address.Id == 0)
     {
@@ -17,6 +24,7 @@
         </p>
     }
     @Html.HiddenFor(x => x.Address.Id)
+    @Html.HiddenFor(x => x.Address.UserId)
 
     <div class="form-group mb-3">
         @Html.LabelFor(x => x.Address.Name)

@@ -15,14 +15,17 @@ namespace MailSender.Models.Domains
             EmailRecipients = new Collection<EmailRecipient>();
         }
         public int Id { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Pole nazwa jest wymagane !!!")]
         [Display(Name = "Nazwa")]
+
         public string Name { get; set; }
-        [Required]
-        [Display(Name = "Adres")]
+        [Required(ErrorMessage = "Pole adres jest wymagane !!!")]
+        [Display(Name = "Adres e-mail")]
+        //[RegularExpression("^[a-zA-Z0-9_\\.-]+@([a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$", ErrorMessage = "adres e-mail jest nieprawidłowy")]
+        [EmailAddress(ErrorMessage = "Nieprawidłowy adres e-mail")]
         public string Email { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Brak właściciela wpisu w książce adresowej !!!")]
         [ForeignKey("User")]
         public string UserId { get; set; }
         public ApplicationUser User { get; set; }

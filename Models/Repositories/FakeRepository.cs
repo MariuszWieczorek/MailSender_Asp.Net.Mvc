@@ -14,11 +14,11 @@ namespace MailSender.Models.Repositories
         {
             return new List<Address>
             {
-                new Address{Id = 1, Name="Jan Kowalski",Email="jan.kowalski@onet.pl" },
-                new Address{Id = 2, Name="Marek Janicki",Email="marek.janicki@onet.pl"},
-                new Address{Id = 3, Name="Aleksandra Nowak",Email="ola.nowak@onet.pl" },
-                new Address{Id = 4, Name="Marek Nowak",Email="marek.nowak@gmial.com" },
-                new Address{Id = 5, Name="Wioletta Krysiak",Email="wiola.k@gmial.com" },
+                new Address{Id = 1, Name="Jan Kowalski",Email="jan.kowalski@onet.pl",UserId = "b3a63cf4-45ef-4476-a96a-0ec5caac1ebb" },
+                new Address{Id = 2, Name="Marek Janicki",Email="marek.janicki@onet.pl",UserId = "b3a63cf4-45ef-4476-a96a-0ec5caac1ebb"},
+                new Address{Id = 3, Name="Aleksandra Nowak",Email="ola.nowak@onet.pl",UserId = "b3a63cf4-45ef-4476-a96a-0ec5caac1ebb" },
+                new Address{Id = 4, Name="Marek Nowak",Email="marek.nowak@gmial.com",UserId = "b3a63cf4-45ef-4476-a96a-0ec5caac1ebb" },
+                new Address{Id = 5, Name="Wioletta Krysiak",Email="wiola.k@gmial.com",UserId = "b3a63cf4-45ef-4476-a96a-0ec5caac1ebb" },
             };
         }
 
@@ -33,6 +33,7 @@ namespace MailSender.Models.Repositories
                 new Email
                 {
                     Id = 1,
+                    UserId = "b3a63cf4-45ef-4476-a96a-0ec5caac1ebb",
                     Subject = "uwagi dotyczące błędów a aplikacji",
                     CreatedDate = DateTime.Now,
                     SentDate = DateTime.Now,
@@ -48,6 +49,7 @@ namespace MailSender.Models.Repositories
                 new Email
                 {
                     Id = 2,
+                    UserId = "b3a63cf4-45ef-4476-a96a-0ec5caac1ebb",
                     Subject = "potwierdzenie dokonania płatności",
                     CreatedDate = DateTime.Now,
                     SentDate = DateTime.Now,
@@ -63,6 +65,7 @@ namespace MailSender.Models.Repositories
                 new Email
                 {
                     Id = 3,
+                    UserId = "b3a63cf4-45ef-4476-a96a-0ec5caac1ebb",
                     Subject = "potwierdzenie wysłania zamówienia",
                     CreatedDate = DateTime.Now,
                     SentDate = DateTime.Now,
@@ -118,6 +121,7 @@ namespace MailSender.Models.Repositories
             return new Email
             {
                 Id = 0,
+                UserId = userId,
                 Subject = "",
                 CreatedDate = DateTime.Now,
                 SentDate = DateTime.Now,

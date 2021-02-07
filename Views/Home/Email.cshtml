@@ -7,7 +7,9 @@
 <h2>@Model.Heading</h2>
 
 <p class="alert alert-dark mb-4 mt-4">
-   Email , Id = <strong>@Model.Email.Id</strong>
+    Widok: Email <br>
+    Id = <strong>@Model.Email.Id</strong> <br>
+    UserId = <strong>@Model.Email.UserId</strong> <br>
 </p>
 
 @if (Model.Email.Id != 0)
@@ -19,93 +21,97 @@
 }
 
 <div class="mt-3 mb-1">
-    @if (Model.Email.Id != 0)
-    {
-        @Html.Partial("_EmailRecipientsPartial", Model.Email.EmailRecipients)
-    }
+
 </div>
 
-@if (Model.Email.Id != 0)
-{
-    <button class="btn btn-sm btn-primary mb-5"
-            onclick='window.location.href = "@Url.Action("EmailRecipient", "Home", new { emailId = Model.Email.Id })"'>
-        Dodaj adresata
-    </button>
-}
 
+<div class="row">
+    <div class="col-lg-6">
 
-<p class="alert alert-info mb-1 mt-1">
-    <strong>Treść Wiadomości</strong>
-</p>
+        @using (Html.BeginForm("Email", "Home"))
+        {
 
-    <div class="row">
-        <div class="col-lg-12">
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary()
 
-            @using (Html.BeginForm("Email", "Home"))
+            if (Model.Email.Id == 0)
             {
-
-                @Html.AntiForgeryToken()
-
-                if (Model.Email.Id == 0)
-                {
-                    <p class="alert alert-info mb-4 mt-4">
-                        Pola: Temat, Wiadomość są
-                        <strong>wymagane</strong>
-                    </p>
-                }
-
-                @Html.HiddenFor(x => x.Email.Id)
-
-                <div class="form-group mb-3">
-                    @Html.LabelFor(x => x.Email.Subject)
-                    @Html.TextBoxFor(x => x.Email.Subject,
-                     new { @class = "form-control", style = "width: 100%; max-width: 100%" })
-                    @Html.ValidationMessageFor(x => x.Email.Subject)
-                </div>
-
-
-                <div class="form-group mb-3">
-                    @Html.LabelFor(x => x.Email.Message)
-                    @Html.TextAreaFor(x => x.Email.Message,
-                     new { @class = "form-control", style = "width: 100%; max-width: 100%" })
-                    @Html.ValidationMessageFor(x => x.Email.Message)
-                </div>
-
-
-                <div class="form-group mb-3">
-                    @Html.LabelFor(x => x.Email.CreatedDate)
-                    @Html.TextBoxFor(x => x.Email.CreatedDate,
-                    "{0:dd-MM-yyyy}",
-                   new
-                   {
-                       @class = "form-control",
-                       @id = "CreatedDate",
-                       autocomplete = "off",
-                       @readonly = "readonly"
-                   })
-                </div>
-
-                <div class="form-group mb-3">
-                    @Html.LabelFor(x => x.Email.SentDate)
-                    @Html.TextBoxFor(x => x.Email.SentDate,
-                     "{0:dd-MM-yyyy}",
-                    new
-                    {
-                        @class = "form-control",
-                        @id = "SentDate",
-                        autocomplete = "off",
-                        @readonly = "readonly"
-                    })
-                </div>
-
-                <button class="btn btn-primary btn-lg" type="submit">
-                    Zapisz
-                </button>
-
+                <p class="alert alert-info mb-4 mt-4">
+                    Pola: Temat, Wiadomość są
+                    <strong>wymagane</strong>
+                </p>
             }
 
-        </div>
+            @Html.HiddenFor(x => x.Email.Id)
+            @Html.HiddenFor(x => x.Email.UserId)
+
+            <div class="form-group mb-3">
+                @Html.LabelFor(x => x.Email.Subject)
+                @Html.TextBoxFor(x => x.Email.Subject,
+                 new { @class = "form-control", style = "width: 100%; max-width: 100%" })
+                @Html.ValidationMessageFor(x => x.Email.Subject)
+            </div>
+
+
+            <div class="form-group mb-3">
+                @Html.LabelFor(x => x.Email.Message)
+                @Html.TextAreaFor(x => x.Email.Message,
+                 new { @class = "form-control", style = "width: 100%; max-width: 100%" })
+                @Html.ValidationMessageFor(x => x.Email.Message)
+            </div>
+
+
+            <div class="form-group mb-3">
+                @Html.LabelFor(x => x.Email.CreatedDate)
+                @Html.TextBoxFor(x => x.Email.CreatedDate,
+                "{0:dd-MM-yyyy}",
+               new
+               {
+                   @class = "form-control",
+                   @id = "CreatedDate",
+                   autocomplete = "off",
+                   @readonly = "readonly"
+               })
+            </div>
+
+            <div class="form-group mb-3">
+                @Html.LabelFor(x => x.Email.SentDate)
+                @Html.TextBoxFor(x => x.Email.SentDate,
+                 "{0:dd-MM-yyyy}",
+                new
+                {
+                    @class = "form-control",
+                    @id = "SentDate",
+                    autocomplete = "off",
+                    @readonly = "readonly"
+                })
+            </div>
+
+            <button class="btn btn-primary btn-lg" type="submit">
+                Zapisz
+            </button>
+
+        }
+
     </div>
+
+    <div class="col-5 offset-1">
+
+        @if (Model.Email.Id != 0)
+        {
+            <button class="btn btn-sm btn-primary mb-2"
+                    onclick='window.location.href = "@Url.Action("EmailRecipient", "Home", new { emailId = Model.Email.Id })"'>
+                Dodaj adresata
+            </button>
+        }
+
+        @if (Model.Email.Id != 0)
+        {
+            @Html.Partial("_EmailRecipientsPartial", Model.Email.EmailRecipients)
+        }
+    </div>
+
+</div>
 
 @section scripts
 {

@@ -14,14 +14,15 @@ namespace MailSender.Controllers
     public class HomeController : Controller
     {
         private FakeRepository      _fakeRepository = new FakeRepository();
-        private AddressRepository _addressRepository = new AddressRepository();
+        private AddressRepository   _addressRepository = new AddressRepository();
+        private EmailRepository     _emailRepository = new EmailRepository();
 
         // Strona główna - lista wiadomości
         [HttpGet]
         public ActionResult Index()
         {
             var userId = User.Identity.GetUserId();
-            var emails = _fakeRepository.GetEmails(userId);
+            var emails = _emailRepository.GetEmails(userId);
             return View(emails);
         }
 
@@ -30,7 +31,7 @@ namespace MailSender.Controllers
         public ActionResult Addresses()
         {
             var userId = User.Identity.GetUserId();
-            var addresses = _fakeRepository.GetAddresses(userId);
+            var addresses = _addressRepository.GetAddresses(userId);
             return View(addresses);
         }
 
@@ -42,7 +43,7 @@ namespace MailSender.Controllers
 
             var email = id == 0 ?
             _fakeRepository.GetNewEmail(userId) :
-            _fakeRepository.GetEmail(userId,id);
+            _emailRepository.GetEmail(userId,id);
             
                         
             var editEmail = PrepareEmailVm(email,userId);
@@ -81,7 +82,7 @@ namespace MailSender.Controllers
 
             var address = id == 0 ?
                  _fakeRepository.GetNewAddress(userId) :
-                 _fakeRepository.GetAddress(userId,id);
+                 _addressRepository.GetAddress(userId,id);
 
             var editAddress = PrepareEditAddressVm(address, userId);
 
@@ -101,12 +102,12 @@ namespace MailSender.Controllers
                 return View("Address", vm);
             }
 
-        /*    
+
             if (address.Id == 0)
                 _addressRepository.AddPosition(address, userId);
             else
                 _addressRepository.UpdatePosition(address, userId);
-        */
+
 
             return RedirectToAction("Addresses", new { id = address.Id });
         }

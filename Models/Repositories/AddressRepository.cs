@@ -16,14 +16,39 @@ namespace MailSender.Models.Repositories
             }
         }
 
+        public Address GetAddress(string userId, int id)
+        {
+            using (var context = new ApplicationDbContext())
+            {
+                return context.Addresses.Single(x => x.UserId == userId && x.Id == id);
+            }
+        }
+
         internal void AddPosition(Address address, string userId)
         {
-            throw new NotImplementedException();
+            using (var context = new ApplicationDbContext())
+            {
+              
+                context.Addresses.Add(address);
+                context.SaveChanges();
+            }
         }
 
         internal void UpdatePosition(Address address, string userId)
         {
-            throw new NotImplementedException();
+            using (var context = new ApplicationDbContext())
+            {
+                // pobieramy pojedynczy rekord z fakturą do aktualizacji
+                var addressToUpdate = context.Addresses
+                    .Single(x => x.Id == address.Id && x.UserId == address.UserId);
+
+                // dokonujemu zmian  
+                addressToUpdate.Name = address.Name;
+                addressToUpdate.Email = address.Email;
+
+                // zapisujemy zmiany 
+                context.SaveChanges();
+            }
         }
     }
 }

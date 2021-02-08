@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Data.Entity;
 
 namespace MailSender.Models.Repositories
 {
@@ -12,23 +13,32 @@ namespace MailSender.Models.Repositories
         {
             using (var context = new ApplicationDbContext())
             {
-                return context.Emails.Where(x => x.UserId == userId).ToList();
+                return context.Emails
+                    .Include(x=>x.EmailRecipients)
+                    .Include(x => x.EmailRecipients.Select(y => y.Address))
+                    .Where(x => x.UserId == userId).ToList();
             }
         }
 
         public Email GetEmail(string userId, int id)
         {
             using (var context = new ApplicationDbContext())
-            {
-                return context.Emails
+            {   
+
+             
+                    var z = context.Emails
+                    .Include(x => x.EmailRecipients)
+                    .Include(x => x.EmailRecipients.Select(y => y.Address))
                     .Single(x => x.UserId == userId && x.Id == id);
+
+                return z;
             }
         }
 
             //       .Include(x => x.EmailRecipients)
             //    .Include(x => x.EmailRecipients.Select(y => y.EmailRecipient))
 
-        public void AddPosition(Email email, string userId)
+        public void AddEmail(Email email, string userId)
         {
             using (var context = new ApplicationDbContext())
             {
@@ -37,7 +47,7 @@ namespace MailSender.Models.Repositories
             }
         }
 
-        public void UpdatePosition(Email email, string userId)
+        public void UpdateEmail(Email email, string userId)
         {
             using (var context = new ApplicationDbContext())
             {
@@ -62,9 +72,25 @@ namespace MailSender.Models.Repositories
                 UserId = userId,
                 Subject = "",
                 CreatedDate = DateTime.Now,
-                SentDate = DateTime.Now,
+                SentDate = null,
                 EmailRecipients = new List<EmailRecipient>()
             };
+        }
+
+        // Usuwamy adresata wiadomości
+        public void DeleteEmail(int emailId, string userId)
+        {
+            using (var context = new ApplicationDbContext())
+            {
+                // załączamy Email aby dobrać się do właściwości UserId
+                var emailToDelete = context.Emails
+                    .Single(x =>
+                    x.Id == emailId &&
+                    x.UserId == userId);
+
+                context.Emails.Remove(emailToDelete);
+                context.SaveChanges();
+            }
         }
     }
 }

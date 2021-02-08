@@ -13,10 +13,12 @@ namespace MailSender.Controllers
     [Authorize]
     public class HomeController : Controller
     {
-        private FakeRepository              _fakeRepository = new FakeRepository();
+     // private FakeRepository              _fakeRepository = new FakeRepository();
         private AddressRepository           _addressRepository = new AddressRepository();
         private EmailRepository             _emailRepository = new EmailRepository();
         private EmailRecipientRepository    _emailRecipientRepository = new EmailRecipientRepository();
+
+        #region lista wiadomości i lista adresów
 
         // Strona główna - lista wiadomości
         [HttpGet]
@@ -35,8 +37,10 @@ namespace MailSender.Controllers
             var addresses = _addressRepository.GetAddresses(userId);
             return View(addresses);
         }
+        #endregion
 
-        #region dodawanie/edycja wiadomości e-mail
+        #region Email dodawanie, edycja, usuwanie wiadomości 
+
         [HttpGet]
         public ActionResult Email(int id = 0)
         {
@@ -66,16 +70,34 @@ namespace MailSender.Controllers
 
   
                 if (email.Id == 0)
-                    _emailRepository.AddPosition(email, userId);
+                    _emailRepository.AddEmail(email, userId);
                 else
-                    _emailRepository.UpdatePosition(email, userId);
+                    _emailRepository.UpdateEmail(email, userId);
 
 
             return RedirectToAction("Index");
         }
-        #endregion
 
-        #region  Address - dodawanie/edycja adresu do ksiązki - - - - - - - - - -
+        [HttpPost]
+        public ActionResult DeleteEmail(int emailId)
+        {
+            try
+            {
+                var userId = User.Identity.GetUserId();
+                _emailRepository.DeleteEmail(emailId, userId);
+            }
+            catch (Exception exception)
+            {
+                // TODO: logowanie do pliku niepowodzenie usunięcia pozycji
+                return Json(new { Success = false, Message = exception.Message });
+            }
+
+            return Json(new { Success = true });
+        }
+
+        #endregion wiadomości
+
+        #region  Address - książka adresowa: dodawanie,edycja,usuwanie adresu
         [HttpGet]
         public ActionResult Address(int id = 0)
         {
@@ -105,16 +127,34 @@ namespace MailSender.Controllers
 
 
             if (address.Id == 0)
-                _addressRepository.AddPosition(address, userId);
+                _addressRepository.AddAddress(address, userId);
             else
-                _addressRepository.UpdatePosition(address, userId);
+                _addressRepository.UpdateAddress(address, userId);
 
 
             return RedirectToAction("Addresses", new { id = address.Id });
         }
+
+        [HttpPost]
+        public ActionResult DeleteAddress(int addressId)
+        {
+            try
+            {
+                var userId = User.Identity.GetUserId();
+                _addressRepository.DeleteAddress(addressId, userId);
+            }
+            catch (Exception exception)
+            {
+                // TODO: logowanie do pliku niepowodzenie usunięcia pozycji
+                return Json(new { Success = false, Message = exception.Message });
+            }
+
+            return Json(new { Success = true });
+        }
         #endregion
 
-        #region EmailRecipient - dodawanie adresata do listy adresatów wiadomości
+        #region EmailRecipient - listy adresatów wiadomości: dodawanie, edycja, usuwanie
+
         [HttpGet]
         public ActionResult EmailRecipient(int emailId = 0, int emailRecipientId = 0)
         {
@@ -142,13 +182,31 @@ namespace MailSender.Controllers
             }
 
             if (emailRecipient.Id == 0)
-                _emailRecipientRepository.AddPosition(emailRecipient, userId);
+                _emailRecipientRepository.AddEmailRecipient(emailRecipient, userId);
             else
-                _emailRecipientRepository.UpdatePosition(emailRecipient, userId);
+                _emailRecipientRepository.UpdateEmailRecipient(emailRecipient, userId);
 
 
             return RedirectToAction("Email", new { id = emailRecipient.EmailId });
         }
+
+        [HttpPost]
+        public ActionResult DeleteEmailRecipient(int emailId, int emailRecipientId)
+        {
+            try
+            {
+                var userId = User.Identity.GetUserId();
+                _emailRecipientRepository.DeleteEmailRecipient(emailId, emailRecipientId, userId);
+            }
+            catch (Exception exception)
+            {
+                // TODO: logowanie do pliku niepowodzenie usunięcia pozycji
+                return Json(new { Success = false, Message = exception.Message });
+            }
+
+            return Json(new { Success = true });
+        }
+
         #endregion
 
         #region prepare View Model
@@ -167,7 +225,7 @@ namespace MailSender.Controllers
             {
                 Email = email,
                 Heading = email.Id == 0 ? "Nowa Wiadomość" : "Edycja Wiadomości",
-                Addresses = _fakeRepository.GetAddresses(userId)
+                Addresses = _addressRepository.GetAddresses(userId)
             };
         }
 
@@ -178,7 +236,7 @@ namespace MailSender.Controllers
             {
                 EmailRecipient = emailRecipient,
                 Heading = emailRecipient.Id == 0 ? "Dodanie Adresata Wiadomości" : "Edycja Adresata Wiadomości",
-                Addresses = _fakeRepository.GetAddresses(userId)
+                Addresses = _addressRepository.GetAddresses(userId)
             };
         }
         #endregion

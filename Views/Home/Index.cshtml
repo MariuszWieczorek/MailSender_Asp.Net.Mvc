@@ -41,9 +41,16 @@
                     }
                 </td>
                 <td>@email.CreatedDate.ToString("dd-MM-yyyy")</td>
-                <td>@email.SentDate.ToString("dd-MM-yyyy")</td>
+
                 <td>
-                    <button class="btn btn-primary btn-sm"
+                     @if(email.SentDate.HasValue)
+                    {
+                        @email.SentDate.GetValueOrDefault().ToString("dd-MM-yyyy");
+                    }
+                </td>
+
+                <td>
+                   <button class="btn btn-primary btn-sm"
                             onclick="sendEmail('@email.Id',this)">
                         wyślij
                     </button>
@@ -72,14 +79,65 @@ else
 @section scripts
 {
     <script type="text/javascript">
-        function deleteEmail() {
+        function deleteEmail(emailId,btn) {
             if (!confirm("Czy na pewno chcesz usunąć wiadomość ?"))
                 return;
+
+                // ajax
+                $.ajax({
+                type: 'POST',
+                url: "@Url.Action("DeleteEmail", "Home")",
+                 data: {
+                     emailId: emailId,
+                },
+                success: function (data) {
+                    if (data.Success) {
+                        // usuwanie z tabeli w html'u
+                        var row = btn.parentNode.parentNode;
+                        row.parentNode.removeChild(row);
+
+                    }
+                    else {
+                        alert(data.Message);
+                    }
+                },
+                error: function (data) {
+                        alert(data.Message);
+                },
+                dataType: 'json'
+
+                });
+                // ajax
         }
 
-        function sendEmail() {
-            if (!confirm("Czy na pewno chcesz wysłać wiadomość ?"))
+        function sendEmail(emailId, btn) {
+            if (!confirm("Czy na pewno chcesz wysłać wiadomość ? " +  emailId))
                 return;
+
+            // --------------------------------------------
+            $.ajax({
+                type: 'POST',
+                url: "@Url.Action("Send", "SendEmail")",
+                 data: {
+                     id: emailId
+                },
+                success: function (data) {
+                    if (data.Success) {
+
+                        alert(data.Message + ' ok');
+                    }
+                    else {
+                        alert(data.Message + ' not ok');
+                    }
+                },
+                error: function (data) {
+                        alert(data.Message);
+                },
+                dataType: 'json',
+                cache: false
+
+                });
+            // --------------------------------------------
         }
     </script>
 }

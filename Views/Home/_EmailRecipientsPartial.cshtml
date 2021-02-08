@@ -19,7 +19,7 @@
                                href="@Url.Action("EmailRecipient", "Home",
                                                             new { emailId = position.EmailId,
                                                                 emailRecipientId = position.Id } )">
-                                @position.Address.Name
+                                @(position?.Address?.Name)
                             </a>
                         </td>
                         <td>@position.Address.Email</td>

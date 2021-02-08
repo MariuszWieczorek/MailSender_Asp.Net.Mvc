@@ -173,12 +173,17 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\SendEmailController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Migrations\202102010731028_init.cs" />
     <Compile Include="Migrations\202102010731028_init.designer.cs">
       <DependentUpon>202102010731028_init.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202102081003447_sentdate_set_to_nullable.cs" />
+    <Compile Include="Migrations\202102081003447_sentdate_set_to_nullable.designer.cs">
+      <DependentUpon>202102081003447_sentdate_set_to_nullable.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Domains\Address.cs" />
@@ -292,6 +297,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\SendEmail\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />
@@ -323,6 +329,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202102010731028_init.resx">
       <DependentUpon>202102010731028_init.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202102081003447_sentdate_set_to_nullable.resx">
+      <DependentUpon>202102081003447_sentdate_set_to_nullable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

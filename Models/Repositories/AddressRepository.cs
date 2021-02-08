@@ -24,7 +24,7 @@ namespace MailSender.Models.Repositories
             }
         }
 
-        public void AddPosition(Address address, string userId)
+        public void AddAddress(Address address, string userId)
         {
             using (var context = new ApplicationDbContext())
             {
@@ -34,7 +34,7 @@ namespace MailSender.Models.Repositories
             }
         }
 
-        public void UpdatePosition(Address address, string userId)
+        public void UpdateAddress(Address address, string userId)
         {
             using (var context = new ApplicationDbContext())
             {
@@ -52,6 +52,22 @@ namespace MailSender.Models.Repositories
                 addressToUpdate.Email = address.Email;
 
                 // zapisujemy zmiany 
+                context.SaveChanges();
+            }
+        }
+
+        // Usuwamy adres z bazy
+        public void DeleteAddress(int addressId, string userId)
+        {
+            using (var context = new ApplicationDbContext())
+            {
+                // załączamy Email aby dobrać się do właściwości UserId
+                var addressToDelete = context.Addresses
+                    .Single(x =>
+                    x.Id == addressId &&
+                    x.UserId == userId);
+
+                context.Addresses.Remove(addressToDelete);
                 context.SaveChanges();
             }
         }

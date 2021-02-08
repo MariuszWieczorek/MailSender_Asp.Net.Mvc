@@ -115,7 +115,7 @@
 
 @section scripts
 {
-        <script type="text/javascript">
+    <script type="text/javascript">
             // --------------------------------------------
 
             function sendEmail() {
@@ -126,9 +126,37 @@
             function deleteEmailRecipient(emailRecipientId, emailId, btn) {
                 if (!confirm("Czy na pewno chcesz usunąć adresata ? " + emailRecipientId  + "," + emailId ))
                     return;
+                // ajax
+                $.ajax({
+                type: 'POST',
+                url: "@Url.Action("DeleteEmailRecipient", "Home")",
+                 data: {
+                     emailId: emailId,
+                     emailRecipientId: emailRecipientId
+                },
+                success: function (data) {
+                    if (data.Success) {
+                        // usuwanie z tabeli w html'u
+                        var row = btn.parentNode.parentNode;
+                        row.parentNode.removeChild(row);
+
+                        var invoiceVal = data.InvoiceValue;
+                        $('#Invoice_Value').val(data.InvoiceValue.toFixed(2).replace(".", ","));
+                    }
+                    else {
+                        alert(data.Message);
+                    }
+                },
+                error: function (data) {
+                        alert(data.Message);
+                },
+                dataType: 'json'
+
+                });
+                // ajax
             }
 
-            
+
 
             $(document).ready(function () {
 
@@ -169,5 +197,5 @@
                 forceParse: false
             });
 
-        </script>
+    </script>
     }

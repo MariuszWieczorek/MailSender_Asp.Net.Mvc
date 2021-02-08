@@ -56,9 +56,35 @@ else
 @section scripts
 {
     <script type="text/javascript">
-        function deleteAddress() {
+        function deleteAddress(addressId, btn) {
             if (!confirm("Czy na pewno chcesz usunąć adres z książki adresowej ?"))
                 return;
+
+             // ajax
+                $.ajax({
+                type: 'POST',
+                url: "@Url.Action("DeleteAddress", "Home")",
+                 data: {
+                     addressId: addressId,
+                },
+                success: function (data) {
+                    if (data.Success) {
+                        // usuwanie z tabeli w html'u
+                        var row = btn.parentNode.parentNode;
+                        row.parentNode.removeChild(row);
+
+                    }
+                    else {
+                        alert(data.Message);
+                    }
+                },
+                error: function (data) {
+                        alert(data.Message);
+                },
+                dataType: 'json'
+
+                });
+                // ajax
         }
     </script>
 }

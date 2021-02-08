@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Data.Entity;
 
 namespace MailSender.Models.Repositories
 {
@@ -22,11 +23,16 @@ namespace MailSender.Models.Repositories
         {
             using (var context = new ApplicationDbContext())
             {
-                return context.EmailRecipients.Single(x => x.Id == emailRecipientId && x.EmailId == emailId && x.Email.UserId == userId);
+                return context.EmailRecipients
+                    .Include(x=>x.Email)
+                    .Include(x => x.Address)
+                    .Single(x => x.Id == emailRecipientId
+                    && x.EmailId == emailId
+                    && x.Email.UserId == userId);
             }
         }
 
-        public void AddPosition(EmailRecipient emailRecipient, string userId)
+        public void AddEmailRecipient(EmailRecipient emailRecipient, string userId)
         {
             using (var context = new ApplicationDbContext())
             {
@@ -35,12 +41,13 @@ namespace MailSender.Models.Repositories
             }
         }
 
-        public void UpdatePosition(EmailRecipient emailRecipient, string userId)
+        public void UpdateEmailRecipient(EmailRecipient emailRecipient, string userId)
         {
             using (var context = new ApplicationDbContext())
             {
                 // pobieramy pojedynczy rekord z adresem do aktualizacji
                 var emailRecipientToUpdate = context.EmailRecipients
+                    .Include(x=>x.Email)
                     .Single(x => x.Id == emailRecipient.Id && x.EmailId == emailRecipient.EmailId);
 
                 if (emailRecipientToUpdate.Email.UserId != userId)
@@ -52,6 +59,24 @@ namespace MailSender.Models.Repositories
                 emailRecipientToUpdate.AddressId = emailRecipient.AddressId;
 
                 // zapisujemy zmiany 
+                context.SaveChanges();
+            }
+        }
+
+        // Usuwamy adresata wiadomości
+        public void DeleteEmailRecipient(int emailId, int emailRecipientId, string userId)
+        {
+            using (var context = new ApplicationDbContext())
+            {
+                // załączamy Email aby dobrać się do właściwości UserId
+                var emailRecipientToDelete = context.EmailRecipients
+                    .Include(x => x.Email)
+                    .Single(x =>
+                    x.EmailId == emailId &&
+                    x.Id == emailRecipientId &&
+                    x.Email.UserId == userId);
+
+                context.EmailRecipients.Remove(emailRecipientToDelete);
                 context.SaveChanges();
             }
         }

@@ -21,7 +21,7 @@ namespace MailSender.Models.Domains
         [Display(Name = "Data Utworzenia")]
         public DateTime CreatedDate { get; set; }
         [Display(Name = "Data Wysłania")]
-        public DateTime SentDate { get; set; }
+        public DateTime? SentDate { get; set; }
         [Display(Name = "Treść")]
         public string Message { get; set; }
       

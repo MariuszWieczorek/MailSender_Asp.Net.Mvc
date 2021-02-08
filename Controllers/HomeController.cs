@@ -13,9 +13,10 @@ namespace MailSender.Controllers
     [Authorize]
     public class HomeController : Controller
     {
-        private FakeRepository      _fakeRepository = new FakeRepository();
-        private AddressRepository   _addressRepository = new AddressRepository();
-        private EmailRepository     _emailRepository = new EmailRepository();
+        private FakeRepository              _fakeRepository = new FakeRepository();
+        private AddressRepository           _addressRepository = new AddressRepository();
+        private EmailRepository             _emailRepository = new EmailRepository();
+        private EmailRecipientRepository    _emailRecipientRepository = new EmailRecipientRepository();
 
         // Strona główna - lista wiadomości
         [HttpGet]
@@ -42,7 +43,7 @@ namespace MailSender.Controllers
             var userId = User.Identity.GetUserId();
 
             var email = id == 0 ?
-            _fakeRepository.GetNewEmail(userId) :
+            _emailRepository.GetNewEmail(userId) :
             _emailRepository.GetEmail(userId,id);
             
                         
@@ -63,12 +64,12 @@ namespace MailSender.Controllers
                 return View("Email", vm);
             }
 
-            /*    
-                if (address.Id == 0)
-                    _addressRepository.AddPosition(address, userId);
+  
+                if (email.Id == 0)
+                    _emailRepository.AddPosition(email, userId);
                 else
-                    _addressRepository.UpdatePosition(address, userId);
-            */
+                    _emailRepository.UpdatePosition(email, userId);
+
 
             return RedirectToAction("Index");
         }
@@ -81,7 +82,7 @@ namespace MailSender.Controllers
             var userId = User.Identity.GetUserId();
 
             var address = id == 0 ?
-                 _fakeRepository.GetNewAddress(userId) :
+                 _addressRepository.GetNewAddress(userId) :
                  _addressRepository.GetAddress(userId,id);
 
             var editAddress = PrepareEditAddressVm(address, userId);
@@ -120,8 +121,8 @@ namespace MailSender.Controllers
             var userId = User.Identity.GetUserId();
 
             var emailRecipient = emailRecipientId == 0 ?
-                _fakeRepository.GetNewEmailRecipient(emailId, emailRecipientId) :
-                _fakeRepository.GetEmailRecipient(emailId, emailRecipientId, userId);
+                _emailRecipientRepository.GetNewEmailRecipient(emailId) :
+                _emailRecipientRepository.GetEmailRecipient(emailId, emailRecipientId, userId);
 
             var editEmailRecipient  = PrepareEmailRecipientVm(emailRecipient, userId);
             return View(editEmailRecipient);
@@ -132,11 +133,7 @@ namespace MailSender.Controllers
         public ActionResult EmailRecipient(EmailRecipient emailRecipient)
         {
             var userId = User.Identity.GetUserId();
-            // zweryfikujemy, czy uzytkownik próbuje zaktualizować swoją fakturę
-            // dodajemy lub aktualizujemy pozycję faktury
-            // wyliczymy wartość pozycji
-            // wyliczymy i zaktualizujemy wrtość faktury
-
+            // zweryfikujemy, czy uzytkownik próbuje zaktualizować swojego maila
 
             if (!ModelState.IsValid)
             {
@@ -144,17 +141,11 @@ namespace MailSender.Controllers
                 return View("EmailRecipient", vm);
             }
 
-            /*
-            var product = _productRepository.GetProduct(invoicePosition.ProductId);
-            invoicePosition.Value = product.Value * invoicePosition.Quantity;
-
-            if (invoicePosition.Id == 0)
-                _invoiceRepository.AddPosition(invoicePosition, userId);
+            if (emailRecipient.Id == 0)
+                _emailRecipientRepository.AddPosition(emailRecipient, userId);
             else
-                _invoiceRepository.UpdatePosition(invoicePosition, userId);
+                _emailRecipientRepository.UpdatePosition(emailRecipient, userId);
 
-            _invoiceRepository.UpdateInvoiceValue(invoicePosition.InvoiceId, userId);
-            */
 
             return RedirectToAction("Email", new { id = emailRecipient.EmailId });
         }

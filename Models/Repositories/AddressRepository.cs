@@ -24,7 +24,7 @@ namespace MailSender.Models.Repositories
             }
         }
 
-        internal void AddPosition(Address address, string userId)
+        public void AddPosition(Address address, string userId)
         {
             using (var context = new ApplicationDbContext())
             {
@@ -34,13 +34,18 @@ namespace MailSender.Models.Repositories
             }
         }
 
-        internal void UpdatePosition(Address address, string userId)
+        public void UpdatePosition(Address address, string userId)
         {
             using (var context = new ApplicationDbContext())
             {
-                // pobieramy pojedynczy rekord z fakturą do aktualizacji
+                // pobieramy pojedynczy rekord z adresem do aktualizacji
                 var addressToUpdate = context.Addresses
                     .Single(x => x.Id == address.Id && x.UserId == address.UserId);
+
+                if (addressToUpdate.UserId != userId )
+                {
+                    throw new Exception("użytkownik nie ma uprawnień do modyfikacji tego adresu.");
+                } 
 
                 // dokonujemu zmian  
                 addressToUpdate.Name = address.Name;
@@ -49,6 +54,16 @@ namespace MailSender.Models.Repositories
                 // zapisujemy zmiany 
                 context.SaveChanges();
             }
+        }
+
+        public Address GetNewAddress(string userId)
+        {
+            return new Address
+            {
+                UserId = userId,
+                Name = string.Empty,
+                Email = string.Empty
+            };
         }
     }
 }

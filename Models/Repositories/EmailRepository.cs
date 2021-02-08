@@ -20,9 +20,51 @@ namespace MailSender.Models.Repositories
         {
             using (var context = new ApplicationDbContext())
             {
-                return context.Emails.Single(x => x.UserId == userId && x.Id == id);
+                return context.Emails
+                    .Single(x => x.UserId == userId && x.Id == id);
             }
         }
 
+            //       .Include(x => x.EmailRecipients)
+            //    .Include(x => x.EmailRecipients.Select(y => y.EmailRecipient))
+
+        public void AddPosition(Email email, string userId)
+        {
+            using (var context = new ApplicationDbContext())
+            {
+                context.Emails.Add(email);
+                context.SaveChanges();
+            }
+        }
+
+        public void UpdatePosition(Email email, string userId)
+        {
+            using (var context = new ApplicationDbContext())
+            {
+                // pobieramy pojedynczy rekord z adresem do aktualizacji
+                var emailToUpdate = context.Emails
+                    .Single(x => x.Id == email.Id && x.UserId == email.UserId);
+
+                // dokonujemu zmian  
+                emailToUpdate.Subject = email.Subject;
+                emailToUpdate.Message = email.Message;
+
+                // zapisujemy zmiany 
+                context.SaveChanges();
+            }
+        }
+
+        public Email GetNewEmail(string userId)
+        {
+            return new Email
+            {
+                Id = 0,
+                UserId = userId,
+                Subject = "",
+                CreatedDate = DateTime.Now,
+                SentDate = DateTime.Now,
+                EmailRecipients = new List<EmailRecipient>()
+            };
+        }
     }
 }

@@ -185,6 +185,7 @@
     <Compile Include="Models\Domains\Email.cs" />
     <Compile Include="Models\Domains\EmailRecipient.cs" />
     <Compile Include="Models\Repositories\AddressRepository.cs" />
+    <Compile Include="Models\Repositories\EmailRecipientRepository.cs" />
     <Compile Include="Models\Repositories\EmailRepository.cs" />
     <Compile Include="Models\Repositories\FakeRepository.cs" />
     <Compile Include="Models\ViewModels\AddPhoneNumberViewModel.cs" />

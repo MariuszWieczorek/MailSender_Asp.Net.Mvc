@@ -151,7 +151,16 @@ namespace MailSender.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = new ApplicationUser {
+                    UserName = model.Email,
+                    Email = model.Email,
+                    SenderName = model.SenderName,
+                    SenderEmail = model.SenderEmail,
+                    SenderEmailPassword = model.SenderEmailPassword,
+                    HostSmtp = model.HostSmtp,
+                    Port = model.Port,
+                    EnableSsl = model.EnableSsl
+                };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {

@@ -42,7 +42,7 @@
                 </td>
                 <td>@email.CreatedDate.ToString("dd-MM-yyyy")</td>
 
-                <td>
+                <td id="id@(email.Id)">
                      @if(email.SentDate.HasValue)
                     {
                         @email.SentDate.GetValueOrDefault().ToString("dd-MM-yyyy");
@@ -119,7 +119,7 @@ else
                 type: 'POST',
                 url: "@Url.Action("Send", "SendEmail")",
                  data: {
-                     id: emailId
+                     id: emailId                                                                                                                                        
                 },
                 success: function (data) {
                     if (data.Success) {

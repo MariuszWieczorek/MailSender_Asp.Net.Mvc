@@ -19,5 +19,32 @@ namespace MailSender.Models
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+
+        [Required]
+        [Display(Name = "Nazwa Użytkownika")]
+        public string SenderName { get; set; }
+
+        [Required]
+        [EmailAddress]
+        [Display(Name = "e-mail nadawcy")]
+        public string SenderEmail { get; set; }
+
+        [Required]
+        [Display(Name = "hasło do e-maila nadawcy")]
+        public string SenderEmailPassword { get; set; }
+
+        [Required]
+        [Display(Name = "Serwer SMTP")]
+        public string HostSmtp { get; set; }
+
+        [Required]
+        [Display(Name = "Port")]
+        public int Port { get; set; }
+
+        [Required]
+        [Display(Name = "Włączony SSL")]
+        public bool EnableSsl { get; set; }
+ 
+       
     }
 }

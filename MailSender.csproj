@@ -185,6 +185,18 @@
     <Compile Include="Migrations\202102081003447_sentdate_set_to_nullable.designer.cs">
       <DependentUpon>202102081003447_sentdate_set_to_nullable.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202102091304475_add_params_to_users.cs" />
+    <Compile Include="Migrations\202102091304475_add_params_to_users.designer.cs">
+      <DependentUpon>202102091304475_add_params_to_users.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202102091508078_user_smtp_data.cs" />
+    <Compile Include="Migrations\202102091508078_user_smtp_data.designer.cs">
+      <DependentUpon>202102091508078_user_smtp_data.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202102091542325_user_smtp_data2.cs" />
+    <Compile Include="Migrations\202102091542325_user_smtp_data2.designer.cs">
+      <DependentUpon>202102091542325_user_smtp_data2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Domains\Address.cs" />
     <Compile Include="Models\Domains\Email.cs" />
@@ -333,6 +345,25 @@
     <EmbeddedResource Include="Migrations\202102081003447_sentdate_set_to_nullable.resx">
       <DependentUpon>202102081003447_sentdate_set_to_nullable.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202102091304475_add_params_to_users.resx">
+      <DependentUpon>202102091304475_add_params_to_users.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202102091508078_user_smtp_data.resx">
+      <DependentUpon>202102091508078_user_smtp_data.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202102091542325_user_smtp_data2.resx">
+      <DependentUpon>202102091542325_user_smtp_data2.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="Cipher\Cipher.csproj">
+      <Project>{4db7570d-ec73-487f-9d28-7d5fce96d9e5}</Project>
+      <Name>Cipher</Name>
+    </ProjectReference>
+    <ProjectReference Include="EmailSender\EmailSender.csproj">
+      <Project>{cf408ec1-cdc3-49f1-ad03-848b43601a57}</Project>
+      <Name>EmailSender</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -64,6 +64,22 @@ namespace MailSender.Models.Repositories
             }
         }
 
+        public void UpdateSentDate(Email email, string userId)
+        {
+            using (var context = new ApplicationDbContext())
+            {
+                // pobieramy pojedynczy rekord z adresem do aktualizacji
+                var emailToUpdate = context.Emails
+                    .Single(x => x.Id == email.Id && x.UserId == email.UserId);
+
+                // dokonujemu zmian  
+                emailToUpdate.SentDate = DateTime.Now;
+
+                // zapisujemy zmiany 
+                context.SaveChanges();
+            }
+        }
+
         public Email GetNewEmail(string userId)
         {
             return new Email

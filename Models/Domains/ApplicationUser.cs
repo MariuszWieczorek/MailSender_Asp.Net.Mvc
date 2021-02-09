@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using MailSender.Models.Domains;
@@ -16,6 +17,14 @@ namespace MailSender.Models
             Emails = new Collection<Email>();
             Addresses = new Collection<Address>();
         }
+
+        public string SenderName { get; set; }
+        public string SenderEmail { get; set; }
+        public string SenderEmailPassword { get; set; }
+        public string HostSmtp { get; set; }
+        public int Port { get; set; }
+        public bool EnableSsl { get; set; }
+
         public ICollection<Email> Emails { get; set; }
         public ICollection<Address> Addresses { get; set; }
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)

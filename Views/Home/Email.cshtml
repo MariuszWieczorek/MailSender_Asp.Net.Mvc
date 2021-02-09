@@ -15,7 +15,7 @@
 @if (Model.Email.Id != 0)
 {
     <button class="btn btn-secondary mb-3"
-            onclick="sendEmail()">
+            onclick="sendEmail(@Model.Email.Id,this)">
         Wyślij
     </button>
 }
@@ -116,13 +116,62 @@
 @section scripts
 {
     <script type="text/javascript">
+
+        // wysyłanie wiadomości
+        function sendEmail(emailId, btn) {
+            if (!confirm("Czy na pewno chcesz wysłać wiadomość ? " +  emailId))
+                return;
+
+            $.ajax({
+                type: 'POST',
+                url: "@Url.Action("Email", "Home")",
+                 data: {
+                     id: emailId
+                },
+                success: function (data) {
+                    if (data.Success) {
+
+                        alert(data.Message + ' ok');
+                    }
+                    else {
+                        alert(data.Message + ' not ok');
+                    }
+                },
+                error: function (data) {
+                        alert(data.Message);
+                },
+                dataType: 'json',
+                cache: false
+
+                });
+
+            $.ajax({
+                type: 'POST',
+                url: "@Url.Action("Send", "SendEmail")",
+                 data: {
+                     id: emailId
+                },
+                success: function (data) {
+                    if (data.Success) {
+
+                        alert(data.Message + ' ok');
+                    }
+                    else {
+                        alert(data.Message + ' not ok');
+                    }
+                },
+                error: function (data) {
+                        alert(data.Message);
+                },
+                dataType: 'json',
+                cache: false
+
+                });
             // --------------------------------------------
+        }
 
-            function sendEmail() {
-                if (!confirm("Czy na pewno chcesz wysłać wiadomość ?"))
-                    return;
-            }
 
+            // Usuwanie adresata z listy adresatów wiadomości
             function deleteEmailRecipient(emailRecipientId, emailId, btn) {
                 if (!confirm("Czy na pewno chcesz usunąć adresata ? " + emailRecipientId  + "," + emailId ))
                     return;

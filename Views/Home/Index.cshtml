@@ -11,6 +11,34 @@
 </button>
 
 
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+    Launch demo modal
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 @if (Model != null && Model.Any())
 {
     <table class="table table-hover table-striped mt-3 mt-5">
@@ -27,41 +55,41 @@
         <tbody>
             @foreach (var email in Model)
             {
-            <tr>
-                <td>
-                    <a class="font-weight-bold"
-                       href="@Url.Action("Email","Home", new { id = email.Id })">
-                        @email.Subject
-                    </a>
-                </td>
-                <td>
-                    @foreach (var recipient in email.EmailRecipients)
-                    {
-                        <div>@recipient.Address.Email</div>
-                    }
-                </td>
-                <td>@email.CreatedDate.ToString("dd-MM-yyyy")</td>
+                <tr>
+                    <td>
+                        <a class="font-weight-bold"
+                           href="@Url.Action("Email","Home", new { id = email.Id })">
+                            @email.Subject
+                        </a>
+                    </td>
+                    <td>
+                        @foreach (var recipient in email.EmailRecipients)
+                        {
+                            <div>@recipient.Address.Email</div>
+                        }
+                    </td>
+                    <td>@email.CreatedDate.ToString("dd-MM-yyyy")</td>
 
-                <td id="id@(email.Id)">
-                     @if(email.SentDate.HasValue)
-                    {
-                        @email.SentDate.GetValueOrDefault().ToString("dd-MM-yyyy");
-                    }
-                </td>
+                    <td id="x@(email.Id)">
+                        @if (email.SentDate.HasValue)
+                        {
+                            @email.SentDate.GetValueOrDefault().ToString("dd-MM-yyyy");
+                        }
+                    </td>
 
-                <td>
-                   <button class="btn btn-primary btn-sm"
-                            onclick="sendEmail('@email.Id',this)">
-                        wyślij
-                    </button>
-                </td>
-                <td>
-                    <button class="btn btn-danger btn-sm"
-                            onclick="deleteEmail('@email.Id',this)">
-                        Usuń
-                    </button>
-                </td>
-            </tr>
+                    <td>
+                        <button class="btn btn-primary btn-sm"
+                                onclick="sendEmail('@email.Id',this)">
+                            wyślij
+                        </button>
+                    </td>
+                    <td>
+                        <button class="btn btn-danger btn-sm"
+                                onclick="deleteEmail('@email.Id',this)">
+                            Usuń
+                        </button>
+                    </td>
+                </tr>
             }
 
         </tbody>
@@ -80,7 +108,7 @@ else
 {
     <script type="text/javascript">
         function deleteEmail(emailId,btn) {
-            if (!confirm("Czy na pewno chcesz usunąć wiadomość ?"))
+            if (!bootstrap.confirm("Czy na pewno chcesz usunąć wiadomość ?"))
                 return;
 
                 // ajax
@@ -113,13 +141,16 @@ else
         function sendEmail(emailId, btn) {
             if (!confirm("Czy na pewno chcesz wysłać wiadomość ? " +  emailId))
                 return;
+            let id_maila = "#x" + emailId
+            let data = new Date();
+            $(id_maila).text(data);
 
             // --------------------------------------------
             $.ajax({
                 type: 'POST',
                 url: "@Url.Action("Send", "SendEmail")",
                  data: {
-                     id: emailId                                                                                                                                        
+                     id: emailId
                 },
                 success: function (data) {
                     if (data.Success) {
@@ -138,7 +169,15 @@ else
 
                 });
             // --------------------------------------------
+
+
+
         }
+
+        $('#exampleModal').on('shown.bs.modal', function () {
+            $('#myInput').trigger('focus')
+        })
+
     </script>
 }
 

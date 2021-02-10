@@ -17,23 +17,22 @@ namespace MailSender.Controllers
     {
 
         private EmailRepository _emailRepository = new EmailRepository();
+        private ApplicationUserRepository _applicationUserRepository = new ApplicationUserRepository();
         public async Task<ActionResult> Send(int id)
         {
             var userId = User.Identity.GetUserId();
             var email = _emailRepository.GetEmail(userId, id);
-
+            var currentUser = _applicationUserRepository.GetApplicationUser(userId);
 
             var emailSender = new EmailSender.Email(new EmailParams
             {
-                HostSmtp = "smtp.gmail.com",
-                Port = int.Parse("587"),
-                EnableSsl = bool.Parse("true"),
-                SenderName = "Mariusz Wieczorek",
-                SenderEmail = "mariusz.wieczorek.testy@gmail.com",
-                SenderEmailPassword = "hasełko"
+                HostSmtp = currentUser.HostSmtp,
+                Port = currentUser.Port,
+                EnableSsl = currentUser.EnableSsl,
+                SenderName = currentUser.SenderName,
+                SenderEmail = currentUser.SenderEmail,
+                SenderEmailPassword = currentUser.SenderEmailPassword
             });
-
-            // DecryptSenderEmailPassword(),"rmhfvaurzyxnuztn"
 
             // Listę odbiorców maila konwertuję to listy adresów
             var  listOfEmailRecipients = new List<string>();

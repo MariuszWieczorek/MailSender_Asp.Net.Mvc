@@ -9,6 +9,8 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using MailSender.Models;
+using MailSender.Models.ViewModels;
+using MailSender.Models.Repositories;
 
 namespace MailSender.Controllers
 {
@@ -17,6 +19,7 @@ namespace MailSender.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        private ApplicationUserRepository _applicationUserRepository = new ApplicationUserRepository();
 
         public AccountController()
         {
@@ -134,12 +137,59 @@ namespace MailSender.Controllers
             }
         }
 
+
+        #region ApplicationUserData - Edycja/zapis
+        
+        //
+        // GET: /Account/ApplicationUserData
+        public ActionResult ApplicationUserData()
+        {
+           var userId = User.Identity.GetUserId();
+           var user = _applicationUserRepository.GetApplicationUser(userId);
+           var vm = PrepareApplicationUserDataViewModel(user);
+ 
+            return View(vm);
+        }
+
+        // POST: /Account/ApplicationUserData
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ApplicationUserData(ApplicationUser user)
+        {
+            var userId = User.Identity.GetUserId();
+
+            if (ModelState.IsValid)
+            {
+                _applicationUserRepository.UpdateApplicationUser(user, userId);
+                return RedirectToAction("Index", "Home");
+            }
+            return View(user);
+        }
+
+        private ApplicationUserDataViewModel PrepareApplicationUserDataViewModel(ApplicationUser user)
+        {
+            var vm = new ApplicationUserDataViewModel()
+            {
+                Id = user.Id,
+                Email = user.Email,
+                SenderEmail = user.SenderEmail,
+                SenderName = user.SenderName,
+                SenderEmailPassword = user.SenderEmailPassword,
+                HostSmtp = user.HostSmtp,
+                Port = user.Port,
+                EnableSsl = user.EnableSsl
+            };
+            return vm;
+        }
+
+        #endregion
+
         //
         // GET: /Account/Register
         [AllowAnonymous]
         public ActionResult Register()
         {
-            return View();
+             return View();
         }
 
         //

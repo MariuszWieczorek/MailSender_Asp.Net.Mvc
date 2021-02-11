@@ -10,6 +10,10 @@
     Utwórz nową wiadomość
 </button>
 
+<button class="btn btn-primary mb-3 mt-3"
+        onclick="showModalForm()">
+    pokaż okienko modalne
+</button>
 
 @if (Model != null && Model.Any())
 {
@@ -74,6 +78,8 @@ else
     </div>
 }
 
+<!-- Obsługa okna modalnego -->
+@Html.Partial("_Popup", new MailSender.Models.PopupModel())
 
 
 @section scripts
@@ -115,7 +121,7 @@ else
                 return;
             let id_maila = "#x" + emailId
             let data = new Date().toISOString().slice(0, 10)
-        
+
 
             $(id_maila).text(data);
 
@@ -148,7 +154,23 @@ else
 
         }
 
-   
+        // obsługa okna modalnego
+        // $(document).ready(function () {
+        //    $('.modal').modal('show');
+        // });
+
+        function showModalForm() {
+            $('.modal').modal('show');
+        }
+
+        function saveModalForm() {
+            document.getElementById('buttonSubmit').click();
+        }
+
+        function hideModalForm() {
+            $('.modal').modal('hide');
+        }
+
     </script>
 }
 

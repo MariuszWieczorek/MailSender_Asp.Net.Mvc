@@ -201,6 +201,7 @@
     <Compile Include="Models\Domains\Address.cs" />
     <Compile Include="Models\Domains\Email.cs" />
     <Compile Include="Models\Domains\EmailRecipient.cs" />
+    <Compile Include="Models\PopupModel.cs" />
     <Compile Include="Models\Repositories\AddressRepository.cs" />
     <Compile Include="Models\Repositories\ApplicationUserRepository.cs" />
     <Compile Include="Models\Repositories\EmailRecipientRepository.cs" />
@@ -309,6 +310,7 @@
     <Content Include="Views\Home\EmailRecipient.cshtml" />
     <Content Include="Views\Home\_EmailRecipientsPartial.cshtml" />
     <Content Include="Views\Account\ApplicationUserData.cshtml" />
+    <Content Include="Views\Home\_Popup.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

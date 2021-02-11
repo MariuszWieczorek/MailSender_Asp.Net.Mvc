@@ -1,4 +1,5 @@
-﻿using MailSender.Models.Domains;
+﻿using MailSender.Models;
+using MailSender.Models.Domains;
 using MailSender.Models.Repositories;
 using MailSender.Models.ViewModels;
 using Microsoft.AspNet.Identity;
@@ -256,6 +257,13 @@ namespace MailSender.Controllers
             ViewBag.Message = "Your contact page.";
 
             return View();
+        }
+
+        [HttpPost]
+        public ActionResult Popup(PopupModel model)
+        {
+            ViewBag.Message = model.Name;
+            return View("About");
         }
         #endregion
     }
